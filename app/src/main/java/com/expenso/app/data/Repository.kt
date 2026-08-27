@@ -3,6 +3,7 @@ package com.expenso.app.data
 import android.content.Context
 import androidx.room.withTransaction
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.combine
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
@@ -19,6 +20,10 @@ class Repository(private val db: AppDatabase) {
     val savingsGoalDao = db.savingsGoalDao()
     val recurringTransactionDao = db.recurringTransactionDao()
     val settingsDao = db.settingsDao()
+    // --- ACCOUNTING ---
+    val chartOfAccountDao = db.chartOfAccountDao()
+    val journalEntryDao = db.journalEntryDao()
+    val journalLineDao = db.journalLineDao()
 
     // --- ACCOUNTS ---
     val allAccounts: Flow<List<Account>> = accountDao.getAllAccounts()
@@ -250,4 +255,140 @@ class Repository(private val db: AppDatabase) {
     suspend fun getSettingsDirect(): Settings? = settingsDao.getSettingsDirect()
 
     suspend fun updateSettings(settings: Settings) = settingsDao.updateSettings(settings)
+
+    // ============================================================
+    // ACCOUNTING
+    // ============================================================
+
+    val allChartOfAccounts: Flow<List<ChartOfAccount>> =
+        chartOfAccountDao.getAllAccounts()
+
+    val allJournalEntries: Flow<List<JournalEntry>> =
+        journalEntryDao.getAllJournalEntries()
+
+    val allJournalLines: Flow<List<JournalLine>> =
+        journalLineDao.getAllJournalLines()
+
+    suspend fun getChartOfAccountById(id: Int): ChartOfAccount? =
+        chartOfAccountDao.getAccountById(id)
+
+    suspend fun getChartOfAccountByCode(code: String): ChartOfAccount? =
+        chartOfAccountDao.getAccountByCode(code)
+
+    suspend fun insertChartOfAccount(account: ChartOfAccount): Long =
+        chartOfAccountDao.insertAccount(account)
+
+    suspend fun updateChartOfAccount(account: ChartOfAccount) =
+        chartOfAccountDao.updateAccount(account)
+
+    suspend fun deleteChartOfAccount(account: ChartOfAccount) =
+        chartOfAccountDao.deleteAccount(account)
+
+    suspend fun getJournalEntryById(id: Int): JournalEntry? =
+        journalEntryDao.getJournalEntryById(id)
+
+    suspend fun getJournalLines(journalEntryId: Int): List<JournalLine> =
+        journalLineDao.getLinesForJournalEntry(journalEntryId)
+
+    fun getLedgerLines(accountId: Int): Flow<List<JournalLine>> =
+        journalLineDao.getLinesForAccount(accountId)
+
+    //code starts here
+    fun getGeneralLedger(accountId: Int): Flow<List<LedgerLine>> {
+        return journalLineDao.getLinesForAccount(accountId)
+            .combine(allJournalEntries) { lines, entries ->
+
+                val entryMap = entries.associateBy { it.id }
+
+                var runningBalance = 0.0
+
+                lines
+                    .sortedBy { line ->
+                        entryMap[line.journalEntryId]?.entryDate ?: ""
+                    }
+                    .mapNotNull { line ->
+
+                        val entry = entryMap[line.journalEntryId]
+                            ?: return@mapNotNull null
+
+                        runningBalance += line.debit - line.credit
+
+                        LedgerLine(
+                            journalEntryId = entry.id,
+                            date = entry.entryDate,
+                            referenceNumber = entry.referenceNumber,
+                            description = if (line.description.isNotBlank()) {
+                                line.description
+                            } else {
+                                entry.description
+                            },
+                            debit = line.debit,
+                            credit = line.credit,
+                            balance = runningBalance
+                        )
+                    }
+            }
+    }
+    //ends here
+
+    /**
+     * Creates a complete double-entry journal transaction.
+     *
+     * Every journal entry must have:
+     *
+     * Total Debits == Total Credits
+     */
+    suspend fun createJournalEntry(
+        entry: JournalEntry,
+        lines: List<JournalLine>
+    ): Long {
+
+        require(lines.isNotEmpty()) {
+            "A journal entry must contain at least one journal line."
+        }
+
+        val totalDebit = lines.sumOf { it.debit }
+        val totalCredit = lines.sumOf { it.credit }
+
+        require(totalDebit > 0.0 || totalCredit > 0.0) {
+            "A journal entry must contain a debit or credit."
+        }
+
+        require(kotlin.math.abs(totalDebit - totalCredit) < 0.01) {
+            "Journal entry is not balanced. Debit: $totalDebit, Credit: $totalCredit"
+        }
+
+        require(lines.all { it.debit >= 0.0 && it.credit >= 0.0 }) {
+            "Debit and credit amounts cannot be negative."
+        }
+
+        require(lines.all { !(it.debit > 0.0 && it.credit > 0.0) }) {
+            "A journal line cannot contain both debit and credit."
+        }
+
+        return db.withTransaction {
+
+            val journalEntryId =
+                journalEntryDao.insertJournalEntry(entry)
+
+            val preparedLines = lines.map { line ->
+                line.copy(
+                    journalEntryId = journalEntryId.toInt()
+                )
+            }
+
+            journalLineDao.insertJournalLines(preparedLines)
+
+            journalEntryId
+        }
+    }
+
+    suspend fun deleteJournalEntry(entry: JournalEntry) {
+        db.withTransaction {
+
+            journalLineDao.deleteLinesForJournalEntry(entry.id)
+
+            journalEntryDao.deleteJournalEntry(entry)
+        }
+    }
 }

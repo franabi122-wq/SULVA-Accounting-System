@@ -66,7 +66,7 @@ fun BudgetsScreen(
     val categories by viewModel.allCategories.collectAsState()
     val transactions by viewModel.allTransactions.collectAsState()
     val settings by viewModel.settings.collectAsState()
-    val currencySymbol = settings?.currency ?: "₹"
+    val currencySymbol = settings?.currency ?: "GH₵"
 
     var selectedFilter by remember { mutableStateOf("All") }
     val currentTime = System.currentTimeMillis()
@@ -351,29 +351,33 @@ fun BudgetsScreen(
                                     )
                                     Spacer(modifier = Modifier.height(6.dp))
 
-                                    BoxWithConstraints(
+                                //code starts here
+                                    //BoxWithConstraints(
+                                        //modifier = Modifier
+                                           // .fillMaxWidth()
+                                            //.padding(top = 4.dp),
+                                        //contentAlignment = Alignment.TopCenter
+                                    //)
+
+                                    Box(
                                         modifier = Modifier
                                             .fillMaxWidth()
                                             .padding(top = 4.dp),
                                         contentAlignment = Alignment.TopCenter
                                     ) {
-                                        val density = LocalDensity.current
-                                        val availableWidthDp = maxWidth
-                                        val gaugeWidthDp = minOf(220.dp, availableWidthDp - 32.dp)
-                                        val gaugeHeightDp = gaugeWidthDp / 2f + 12.dp
-
                                         Box(
                                             modifier = Modifier
-                                                .width(gaugeWidthDp)
-                                                .height(gaugeHeightDp),
+                                                .width(220.dp)
+                                                .height(122.dp),
                                             contentAlignment = Alignment.TopCenter
                                         ) {
-                                            val trackColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f)
+                                            val trackColor =
+                                                MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f)
+
                                             Canvas(
                                                 modifier = Modifier.fillMaxSize()
                                             ) {
                                                 val strokeWidth = 16.dp.toPx()
-                                                val r = (size.width - strokeWidth) / 2f
 
                                                 val rectLeft = strokeWidth / 2f
                                                 val rectTop = strokeWidth / 2f
@@ -387,7 +391,10 @@ fun BudgetsScreen(
                                                     useCenter = false,
                                                     topLeft = Offset(rectLeft, rectTop),
                                                     size = Size(rectSize, rectSize),
-                                                    style = Stroke(width = strokeWidth, cap = StrokeCap.Round)
+                                                    style = Stroke(
+                                                        width = strokeWidth,
+                                                        cap = StrokeCap.Round
+                                                    )
                                                 )
 
                                                 // Draw progress
@@ -398,7 +405,10 @@ fun BudgetsScreen(
                                                     useCenter = false,
                                                     topLeft = Offset(rectLeft, rectTop),
                                                     size = Size(rectSize, rectSize),
-                                                    style = Stroke(width = strokeWidth, cap = StrokeCap.Round)
+                                                    style = Stroke(
+                                                        width = strokeWidth,
+                                                        cap = StrokeCap.Round
+                                                    )
                                                 )
                                             }
 
@@ -406,20 +416,25 @@ fun BudgetsScreen(
                                                 modifier = Modifier
                                                     .align(Alignment.BottomCenter)
                                                     .padding(bottom = 6.dp),
-                                                horizontalAlignment = Alignment.CenterHorizontally,
-                                                verticalArrangement = Arrangement.Center
+                                                horizontalAlignment = Alignment.CenterHorizontally
                                             ) {
                                                 Row(
                                                     verticalAlignment = Alignment.CenterVertically,
                                                     horizontalArrangement = Arrangement.Center
                                                 ) {
                                                     Icon(
-                                                        imageVector = if (isOverBudget) Icons.Rounded.Warning else Icons.Rounded.CheckCircle,
+                                                        imageVector = if (isOverBudget) {
+                                                            Icons.Rounded.Warning
+                                                        } else {
+                                                            Icons.Rounded.CheckCircle
+                                                        },
                                                         contentDescription = null,
                                                         tint = statusColor,
                                                         modifier = Modifier.size(12.dp)
                                                     )
+
                                                     Spacer(modifier = Modifier.width(4.dp))
+
                                                     Text(
                                                         text = if (isOverBudget) "EXCEEDED" else "REMAINING",
                                                         style = MaterialTheme.typography.labelMedium.copy(
@@ -434,7 +449,13 @@ fun BudgetsScreen(
                                                 Spacer(modifier = Modifier.height(2.dp))
 
                                                 Text(
-                                                    text = "$currencySymbol${String.format(java.util.Locale.getDefault(), "%,.1f", centralAmount)}",
+                                                    text = "$currencySymbol${
+                                                        String.format(
+                                                            Locale.getDefault(),
+                                                            "%,.1f",
+                                                            centralAmount
+                                                        )
+                                                    }",
                                                     style = MaterialTheme.typography.headlineLarge.copy(
                                                         fontWeight = FontWeight.Black,
                                                         fontSize = 22.sp
@@ -444,6 +465,8 @@ fun BudgetsScreen(
                                             }
                                         }
                                     }
+
+                                    //error ends here
 
                                     Spacer(modifier = Modifier.height(14.dp))
 

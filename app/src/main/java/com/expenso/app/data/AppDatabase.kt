@@ -14,11 +14,17 @@ import androidx.sqlite.db.SupportSQLiteDatabase
         Budget::class,
         SavingsGoal::class,
         RecurringTransaction::class,
-        Settings::class
+        Settings::class,
+
+        // Accounting entities
+        ChartOfAccount::class,
+        JournalEntry::class,
+        JournalLine::class
     ],
-    version = 18,
+    version = 19,
     exportSchema = false
-)
+)//ends here
+
 abstract class AppDatabase : RoomDatabase() {
     abstract fun accountDao(): AccountDao
     abstract fun categoryDao(): CategoryDao
@@ -27,6 +33,10 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun savingsGoalDao(): SavingsGoalDao
     abstract fun recurringTransactionDao(): RecurringTransactionDao
     abstract fun settingsDao(): SettingsDao
+    abstract fun chartOfAccountDao(): ChartOfAccountDao
+    abstract fun journalEntryDao(): JournalEntryDao
+    abstract fun journalLineDao(): JournalLineDao
+
 
     companion object {
         @Volatile
@@ -74,7 +84,7 @@ abstract class AppDatabase : RoomDatabase() {
                     db.execSQL("ALTER TABLE budgets ADD COLUMN endDate INTEGER")
                 } catch (e: Exception) {}
             }
-        }
+        }//code ends here
 
         val MIGRATION_17_18 = object : androidx.room.migration.Migration(17, 18) {
             override fun migrate(db: androidx.sqlite.db.SupportSQLiteDatabase) {
@@ -82,7 +92,46 @@ abstract class AppDatabase : RoomDatabase() {
                     db.execSQL("ALTER TABLE budgets ADD COLUMN budgetName TEXT")
                 } catch (e: Exception) {}
             }
+        }//code ends here
+
+        //migration code starts here
+        val MIGRATION_18_19 = object : androidx.room.migration.Migration(18, 19) {
+            override fun migrate(db: androidx.sqlite.db.SupportSQLiteDatabase) {
+
+                db.execSQL("""
+            CREATE TABLE IF NOT EXISTS chart_of_accounts (
+                id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                accountCode TEXT NOT NULL,
+                accountName TEXT NOT NULL,
+                accountType TEXT NOT NULL,
+                description TEXT NOT NULL,
+                isActive INTEGER NOT NULL
+            )
+        """.trimIndent())
+
+                db.execSQL("""
+            CREATE TABLE IF NOT EXISTS journal_entries (
+                id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                entryDate TEXT NOT NULL,
+                referenceNumber TEXT NOT NULL,
+                description TEXT NOT NULL,
+                createdAt TEXT NOT NULL
+            )
+        """.trimIndent())
+
+                db.execSQL("""
+            CREATE TABLE IF NOT EXISTS journal_lines (
+                id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                journalEntryId INTEGER NOT NULL,
+                accountId INTEGER NOT NULL,
+                debit REAL NOT NULL,
+                credit REAL NOT NULL,
+                description TEXT NOT NULL
+            )
+        """.trimIndent())
+            }
         }
+        //ends here
 
         fun getDatabase(context: Context): AppDatabase {
             return INSTANCE ?: synchronized(this) {
@@ -92,7 +141,17 @@ abstract class AppDatabase : RoomDatabase() {
                     "expenso_database"
                 )
                 .addCallback(DatabaseCallback())
-                .addMigrations(MIGRATION_4_5, MIGRATION_15_16, MIGRATION_16_17, MIGRATION_17_18)
+                //.addMigrations(MIGRATION_4_5, MIGRATION_15_16, MIGRATION_16_17, MIGRATION_17_18)
+                   //new migrations starts here
+                    .addMigrations(
+                        MIGRATION_4_5,
+                        MIGRATION_15_16,
+                        MIGRATION_16_17,
+                        MIGRATION_17_18,
+                        MIGRATION_18_19
+                    )
+                    //code ends here
+
                 .fallbackToDestructiveMigration(dropAllTables = true)
                 .build()
                 INSTANCE = instance
@@ -162,7 +221,51 @@ abstract class AppDatabase : RoomDatabase() {
                     db.execSQL("INSERT INTO accounts (id, name, type, openingBalance, currentBalance, icon, color) VALUES (2, 'Bank Account', 'Bank Account', 0.0, 0.0, 'account_balance', '#A0C4FF')")
 
                     // Seed Settings
-                    db.execSQL("INSERT OR IGNORE INTO settings (id, themeMode, currency, pinEnabled, biometricEnabled, notificationsEnabled, colorPalette) VALUES (1, 'system', '₹', 0, 0, 1, 'Default')")
+                    db.execSQL("INSERT OR IGNORE INTO settings (id, themeMode, currency, pinEnabled, biometricEnabled, notificationsEnabled, colorPalette) VALUES (1, 'system', 'GH₵', 0, 0, 1, 'Default')")
+                    //code starts here
+                    // Seed Default Chart of Accounts
+                    db.execSQL("""
+    INSERT INTO chart_of_accounts
+    (accountCode, accountName, accountType, description, isActive)
+    VALUES
+    ('1000', 'Cash', 'ASSET', 'Cash on hand', 1)
+""".trimIndent())
+
+                    db.execSQL("""
+    INSERT INTO chart_of_accounts
+    (accountCode, accountName, accountType, description, isActive)
+    VALUES
+    ('1100', 'Bank Account', 'ASSET', 'Money held in bank accounts', 1)
+""".trimIndent())
+
+                    db.execSQL("""
+    INSERT INTO chart_of_accounts
+    (accountCode, accountName, accountType, description, isActive)
+    VALUES
+    ('2000', 'Accounts Payable', 'LIABILITY', 'Amounts owed to suppliers and other parties', 1)
+""".trimIndent())
+
+                    db.execSQL("""
+    INSERT INTO chart_of_accounts
+    (accountCode, accountName, accountType, description, isActive)
+    VALUES
+    ('3000', 'Owner''s Equity', 'EQUITY', 'Owner''s investment in the business', 1)
+""".trimIndent())
+
+                    db.execSQL("""
+    INSERT INTO chart_of_accounts
+    (accountCode, accountName, accountType, description, isActive)
+    VALUES
+    ('4000', 'Sales Revenue', 'REVENUE', 'Income generated from sales', 1)
+""".trimIndent())
+
+                    db.execSQL("""
+    INSERT INTO chart_of_accounts
+    (accountCode, accountName, accountType, description, isActive)
+    VALUES
+    ('5000', 'General Expenses', 'EXPENSE', 'General operating expenses', 1)
+""".trimIndent())
+                    //code ends here
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }

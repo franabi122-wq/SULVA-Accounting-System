@@ -70,7 +70,10 @@ fun MoreScreen(
     onNavigateToAddBudget: () -> Unit,
     onNavigateToAddGoal: () -> Unit,
     onNavigateToAddRecurring: () -> Unit,
-    onEditSavingsGoal: (SavingsGoal) -> Unit
+    onEditSavingsGoal: (SavingsGoal) -> Unit,
+    onNavigateToAccounting: () -> Unit,
+    //onNavigateToJournalLines: () -> Unit
+
 ) {
     val context = LocalContext.current
     val haptic = LocalHapticFeedback.current
@@ -89,7 +92,7 @@ fun MoreScreen(
     val importSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = false)
     val coroutineScope = rememberCoroutineScope()
 
-    val currencySymbol = settings?.currency ?: "₹"
+    val currencySymbol = settings?.currency ?: "GH₵"
 
     Column(
         modifier = Modifier
@@ -113,6 +116,7 @@ fun MoreScreen(
             elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
         ) {
             Column {
+                //code starts here
                 ExpensoMenuItem(
                     icon = Icons.AutoMirrored.Rounded.List,
                     title = "Transactions",
@@ -121,8 +125,29 @@ fun MoreScreen(
                     iconBgColor = MaterialTheme.colorScheme.secondary.copy(alpha = 0.15f),
                     onClick = { viewModel.selectTab(0) }
                 )
-                HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp), color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.4f))
-                
+
+                HorizontalDivider(
+                    modifier = Modifier.padding(horizontal = 16.dp),
+                    color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.4f)
+                )
+
+                     // Journal Lines
+                // Accounting
+                ExpensoMenuItem(
+                    icon = Icons.AutoMirrored.Rounded.MenuBook,
+                    title = "Accounting",
+                    subtitle = "Journal entries, ledgers and balances",
+                    iconTint = MaterialTheme.colorScheme.primary,
+                    iconBgColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.15f),
+                    onClick = { onNavigateToAccounting() }
+                )
+
+                HorizontalDivider(
+                    modifier = Modifier.padding(horizontal = 16.dp),
+                    color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.4f)
+                )
+                //code ends here
+
                 ExpensoMenuItem(
                     icon = Icons.Rounded.Category,
                     title = "Categories",
@@ -131,6 +156,7 @@ fun MoreScreen(
                     iconBgColor = MaterialTheme.colorScheme.tertiary.copy(alpha = 0.15f),
                     onClick = { onNavigateToCategories() }
                 )
+                //code ends here
             }
         }
 
@@ -183,7 +209,7 @@ fun MoreScreen(
                                         .clip(CircleShape)
                                         .background(if (isSelected) MaterialTheme.colorScheme.primary else Color.Transparent)
                                         .clickable {
-                                            viewModel.updateSettings(mode, settings?.currency ?: "₹", settings?.notificationsEnabled ?: true)
+                                            viewModel.updateSettings(mode, settings?.currency ?: "GH₵", settings?.notificationsEnabled ?: true)
                                         },
                                     contentAlignment = Alignment.Center
                                 ) {
@@ -330,7 +356,7 @@ fun MoreScreen(
                         ),
                         shape = RoundedCornerShape(16.dp)
                     ) {
-                        Text(settings?.currency ?: "₹", fontWeight = FontWeight.Bold)
+                        Text(settings?.currency ?: "GH₵", fontWeight = FontWeight.Bold)
                     }
                 }
 
@@ -603,6 +629,7 @@ fun MoreScreen(
                     )
                     
                     val currencyOptions = listOf(
+                        Pair("GH₵", "GHS - Ghanaian Cedi"),
                         Pair("$", "USD - US Dollar"),
                         Pair("₹", "INR - Indian Rupee"),
                         Pair("€", "EUR - Euro"),
@@ -839,7 +866,7 @@ fun MoreScreen(
                                             Text("Spent: $currencySymbol${String.format("%.1f", spentAmount)}", style = MaterialTheme.typography.bodySmall, color = if (isOverBudget) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurface)
                                             Text("Remaining: $currencySymbol${String.format("%.1f", (budget.budgetAmount - spentAmount).coerceAtLeast(0.0))}", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.outline)
                                         }
-                                    }
+                                    }//code highlight ends here
                                 }
                             }
                         }

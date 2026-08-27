@@ -176,7 +176,7 @@ fun TransactionForm(
     val accounts by viewModel.allAccounts.collectAsState()
     val categories by viewModel.allCategories.collectAsState()
     val settings by viewModel.settings.collectAsState()
-    val currencySymbol = settings?.currency ?: "₹"
+    val currencySymbol = settings?.currency ?: "GH₵"
     val isSystemDark = androidx.compose.foundation.isSystemInDarkTheme()
     val isDarkAppTheme = when (settings?.themeMode) {
         "light" -> false
@@ -1405,7 +1405,7 @@ fun AccountForm(
     val context = LocalContext.current
     val types by viewModel.accountTypes.collectAsState()
     val settings by viewModel.settings.collectAsState()
-    val currencySymbol = settings?.currency ?: "₹"
+    val currencySymbol = settings?.currency ?: "GH₵"
     
     var name by remember(accountToEdit) { mutableStateOf(accountToEdit?.name ?: "") }
     var type by remember(accountToEdit) { mutableStateOf(accountToEdit?.type ?: "Cash") }
@@ -2255,7 +2255,7 @@ fun BudgetForm(
     var showDateRangePicker by remember { mutableStateOf(false) }
     
     val expenseCategories = categories.filter { it.type == "expense" }
-    val currencySymbol = settings?.currency ?: "₹"
+    val currencySymbol = settings?.currency ?: "GH₵"
 
     // Synchronize selectedCategoryId based on isCategorySpecific selection
     LaunchedEffect(isCategorySpecific) {

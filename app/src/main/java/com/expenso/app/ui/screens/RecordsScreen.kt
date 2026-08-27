@@ -188,7 +188,7 @@ fun RecordsScreen(
         exceededSet
     }
 
-    val currencySymbol = settings?.currency ?: "₹"
+    val currencySymbol = settings?.currency ?: "GH₵"
 
     // Calculate Summary Metrics based on Current Transactions
     val (totalIncome, totalExpense, totalBalance) = remember(filteredTransactions) {

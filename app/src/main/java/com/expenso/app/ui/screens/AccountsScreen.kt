@@ -14,13 +14,14 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.automirrored.rounded.MenuBook
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.*
 import androidx.compose.material.icons.automirrored.rounded.*
-import androidx.compose.material.icons.automirrored.rounded.*
+
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -38,6 +39,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.expenso.app.data.Account
 import com.expenso.app.data.ExpensoViewModel
+import com.expenso.app.data.JournalLine
 import com.expenso.app.ui.components.IconMapper
 import com.expenso.app.ui.components.AnimatedEntranceItem
 
@@ -47,7 +49,8 @@ fun AccountsScreen(
     viewModel: ExpensoViewModel,
     onAddAccountClick: () -> Unit,
     onEditAccount: (Account) -> Unit,
-    onAddTransactionClick: (Account?) -> Unit
+    onAddTransactionClick: (Account?) -> Unit,
+    //onNavigateToJournalLines: () -> Unit
 ) {
     val context = LocalContext.current
     val accounts by viewModel.allAccounts.collectAsState()
@@ -60,7 +63,7 @@ fun AccountsScreen(
         selectedAccountForHistory = null
     }
     
-    val currencySymbol = settings?.currency ?: "₹"
+    val currencySymbol = settings?.currency ?: "GH₵"
     val (netWorth, totalIncome, totalExpense) = remember(accounts, transactions) {
         val nw = accounts.sumOf { it.currentBalance }
         val inc = transactions.filter { it.type == "income" }.sumOf { it.amount }
@@ -181,7 +184,7 @@ fun AccountsScreen(
                                     color = Color(0xFF81C784)
                                 )
                             }
-                        }
+                        }//ends here
 
                         VerticalDivider(
                             color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.15f),
@@ -227,6 +230,9 @@ fun AccountsScreen(
         }
 
         HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.4f), thickness = 1.dp)
+
+
+
 
         // ACCOUNT CARDS LIST
         if (accounts.isEmpty()) {

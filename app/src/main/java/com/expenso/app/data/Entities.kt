@@ -136,7 +136,7 @@ data class RecurringTransaction(
 data class Settings(
     @PrimaryKey val id: Int = 1, // Single row constraint (always 1)
     val themeMode: String = "system", // system, light, dark
-    val currency: String = "₹", // currency symbol or code: $, ₹, €, £, etc.
+    val currency: String = "GH₵", // currency symbol or code: $, ₹, €, £, etc.
     val pinEnabled: Boolean = false,
     val biometricEnabled: Boolean = false,
     val notificationsEnabled: Boolean = true,

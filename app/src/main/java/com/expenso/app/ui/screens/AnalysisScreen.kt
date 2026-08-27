@@ -62,7 +62,7 @@ fun AnalysisScreen(
     var customStartDate by remember { mutableStateOf<Long?>(null) }
     var customEndDate by remember { mutableStateOf<Long?>(null) }
 
-    val currency = settings?.currency ?: "₹"
+    val currency = settings?.currency ?: "GH₵"
 
     LaunchedEffect(currentMonthCalendar) {
         val startCal = (currentMonthCalendar.clone() as Calendar).apply {

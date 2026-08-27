@@ -151,55 +151,330 @@ class ExpensoViewModel(application: Application) : AndroidViewModel(application)
 
                 if (cats.isEmpty()) {
                     val defaultCats = listOf(
-                        Category(name = "Bills", type = "expense", icon = "receipt_long", color = "#FFDFBA", isDefault = false, orderIndex = 1),
-                        Category(name = "Car", type = "expense", icon = "directions_car", color = "#FFB3BA", isDefault = false, orderIndex = 2),
-                        Category(name = "Clothing", type = "expense", icon = "checkroom", color = "#BDB2FF", isDefault = false, orderIndex = 3),
-                        Category(name = "Education", type = "expense", icon = "school", color = "#D8B4FE", isDefault = false, orderIndex = 4),
-                        Category(name = "Electronics", type = "expense", icon = "devices", color = "#FFCAD4", isDefault = false, orderIndex = 5),
-                        Category(name = "Entertainment", type = "expense", icon = "sports_esports", color = "#A0C4FF", isDefault = false, orderIndex = 6),
-                        Category(name = "Food", type = "expense", icon = "restaurant", color = "#D0F4DE", isDefault = false, orderIndex = 7),
-                        Category(name = "Health", type = "expense", icon = "medical_services", color = "#FCE1E4", isDefault = false, orderIndex = 8),
-                        Category(name = "Home", type = "expense", icon = "home", color = "#E2F0D9", isDefault = false, orderIndex = 9),
-                        Category(name = "Insurance", type = "expense", icon = "shield", color = "#FCF6BD", isDefault = false, orderIndex = 10),
-                        Category(name = "Shopping", type = "expense", icon = "shopping_bag", color = "#A9DEF9", isDefault = false, orderIndex = 11),
-                        Category(name = "Social", type = "expense", icon = "groups", color = "#E4C1F9", isDefault = false, orderIndex = 12),
-                        Category(name = "Tax", type = "expense", icon = "account_balance", color = "#D0F4EA", isDefault = false, orderIndex = 13),
-                        Category(name = "Mobile", type = "expense", icon = "phone_android", color = "#FFD6A5", isDefault = false, orderIndex = 14),
-                        Category(name = "Transportation", type = "expense", icon = "directions_bus", color = "#FFFACD", isDefault = false, orderIndex = 15),
-                        Category(name = "Others", type = "expense", icon = "more_horiz", color = "#FAFAD2", isDefault = false, orderIndex = 16),
-                        Category(name = "Wifi & Internet", type = "expense", icon = "wifi", color = "#FFEFD5", isDefault = false, orderIndex = 17),
-                        Category(name = "Gym", type = "expense", icon = "fitness_center", color = "#FFE4B5", isDefault = false, orderIndex = 18),
-                        
-                        Category(name = "Others", type = "income", icon = "more_horiz", color = "#BFFCC6", isDefault = false, orderIndex = 19),
-                        Category(name = "Awards", type = "income", icon = "emoji_events", color = "#CAFFBF", isDefault = false, orderIndex = 20),
-                        Category(name = "Coupons", type = "income", icon = "local_offer", color = "#9BF6FF", isDefault = false, orderIndex = 21),
-                        Category(name = "Grants", type = "income", icon = "school", color = "#FFFFBA", isDefault = false, orderIndex = 22),
-                        Category(name = "Lottery", type = "income", icon = "casino", color = "#FFCAD4", isDefault = false, orderIndex = 23),
-                        Category(name = "Refunds", type = "income", icon = "receipt_long", color = "#A0C4FF", isDefault = false, orderIndex = 24),
-                        Category(name = "Rental", type = "income", icon = "home", color = "#D8B4FE", isDefault = false, orderIndex = 25),
-                        Category(name = "Salary", type = "income", icon = "payments", color = "#B9FBC0", isDefault = false, orderIndex = 26),
-                        Category(name = "Sold Items", type = "income", icon = "storefront", color = "#FBF8CC", isDefault = false, orderIndex = 27)
+                        Category(
+                            name = "Bills",
+                            type = "expense",
+                            icon = "receipt_long",
+                            color = "#FFDFBA",
+                            isDefault = false,
+                            orderIndex = 1
+                        ),
+                        Category(
+                            name = "Car",
+                            type = "expense",
+                            icon = "directions_car",
+                            color = "#FFB3BA",
+                            isDefault = false,
+                            orderIndex = 2
+                        ),
+                        Category(
+                            name = "Clothing",
+                            type = "expense",
+                            icon = "checkroom",
+                            color = "#BDB2FF",
+                            isDefault = false,
+                            orderIndex = 3
+                        ),
+                        Category(
+                            name = "Education",
+                            type = "expense",
+                            icon = "school",
+                            color = "#D8B4FE",
+                            isDefault = false,
+                            orderIndex = 4
+                        ),
+                        Category(
+                            name = "Electronics",
+                            type = "expense",
+                            icon = "devices",
+                            color = "#FFCAD4",
+                            isDefault = false,
+                            orderIndex = 5
+                        ),
+                        Category(
+                            name = "Entertainment",
+                            type = "expense",
+                            icon = "sports_esports",
+                            color = "#A0C4FF",
+                            isDefault = false,
+                            orderIndex = 6
+                        ),
+                        Category(
+                            name = "Food",
+                            type = "expense",
+                            icon = "restaurant",
+                            color = "#D0F4DE",
+                            isDefault = false,
+                            orderIndex = 7
+                        ),
+                        Category(
+                            name = "Health",
+                            type = "expense",
+                            icon = "medical_services",
+                            color = "#FCE1E4",
+                            isDefault = false,
+                            orderIndex = 8
+                        ),
+                        Category(
+                            name = "Home",
+                            type = "expense",
+                            icon = "home",
+                            color = "#E2F0D9",
+                            isDefault = false,
+                            orderIndex = 9
+                        ),
+                        Category(
+                            name = "Insurance",
+                            type = "expense",
+                            icon = "shield",
+                            color = "#FCF6BD",
+                            isDefault = false,
+                            orderIndex = 10
+                        ),
+                        Category(
+                            name = "Shopping",
+                            type = "expense",
+                            icon = "shopping_bag",
+                            color = "#A9DEF9",
+                            isDefault = false,
+                            orderIndex = 11
+                        ),
+                        Category(
+                            name = "Social",
+                            type = "expense",
+                            icon = "groups",
+                            color = "#E4C1F9",
+                            isDefault = false,
+                            orderIndex = 12
+                        ),
+                        Category(
+                            name = "Tax",
+                            type = "expense",
+                            icon = "account_balance",
+                            color = "#D0F4EA",
+                            isDefault = false,
+                            orderIndex = 13
+                        ),
+                        Category(
+                            name = "Mobile",
+                            type = "expense",
+                            icon = "phone_android",
+                            color = "#FFD6A5",
+                            isDefault = false,
+                            orderIndex = 14
+                        ),
+                        Category(
+                            name = "Transportation",
+                            type = "expense",
+                            icon = "directions_bus",
+                            color = "#FFFACD",
+                            isDefault = false,
+                            orderIndex = 15
+                        ),
+                        Category(
+                            name = "Others",
+                            type = "expense",
+                            icon = "more_horiz",
+                            color = "#FAFAD2",
+                            isDefault = false,
+                            orderIndex = 16
+                        ),
+                        Category(
+                            name = "Wifi & Internet",
+                            type = "expense",
+                            icon = "wifi",
+                            color = "#FFEFD5",
+                            isDefault = false,
+                            orderIndex = 17
+                        ),
+                        Category(
+                            name = "Gym",
+                            type = "expense",
+                            icon = "fitness_center",
+                            color = "#FFE4B5",
+                            isDefault = false,
+                            orderIndex = 18
+                        ),
+
+                        Category(
+                            name = "Others",
+                            type = "income",
+                            icon = "more_horiz",
+                            color = "#BFFCC6",
+                            isDefault = false,
+                            orderIndex = 19
+                        ),
+                        Category(
+                            name = "Awards",
+                            type = "income",
+                            icon = "emoji_events",
+                            color = "#CAFFBF",
+                            isDefault = false,
+                            orderIndex = 20
+                        ),
+                        Category(
+                            name = "Coupons",
+                            type = "income",
+                            icon = "local_offer",
+                            color = "#9BF6FF",
+                            isDefault = false,
+                            orderIndex = 21
+                        ),
+                        Category(
+                            name = "Grants",
+                            type = "income",
+                            icon = "school",
+                            color = "#FFFFBA",
+                            isDefault = false,
+                            orderIndex = 22
+                        ),
+                        Category(
+                            name = "Lottery",
+                            type = "income",
+                            icon = "casino",
+                            color = "#FFCAD4",
+                            isDefault = false,
+                            orderIndex = 23
+                        ),
+                        Category(
+                            name = "Refunds",
+                            type = "income",
+                            icon = "receipt_long",
+                            color = "#A0C4FF",
+                            isDefault = false,
+                            orderIndex = 24
+                        ),
+                        Category(
+                            name = "Rental",
+                            type = "income",
+                            icon = "home",
+                            color = "#D8B4FE",
+                            isDefault = false,
+                            orderIndex = 25
+                        ),
+                        Category(
+                            name = "Salary",
+                            type = "income",
+                            icon = "payments",
+                            color = "#B9FBC0",
+                            isDefault = false,
+                            orderIndex = 26
+                        ),
+                        Category(
+                            name = "Sold Items",
+                            type = "income",
+                            icon = "storefront",
+                            color = "#FBF8CC",
+                            isDefault = false,
+                            orderIndex = 27
+                        )
                     )
                     defaultCats.forEach { repository.categoryDao.insertCategory(it) }
 
-                    repository.settingsDao.insertSettings(Settings(id = 1, themeMode = "system", currency = "₹", pinEnabled = false, biometricEnabled = false, notificationsEnabled = true, colorPalette = "Default"))
-                }
-                
-                // Seed Default Accounts if there are no accounts
-                val accounts = repository.allAccounts.first()
-                if (accounts.isEmpty()) {
-                    repository.accountDao.insertAccount(
-                        Account(name = "Cash", type = "Cash", openingBalance = 0.0, currentBalance = 0.0, icon = "wallet", color = "#FFD6A5")
+                    repository.settingsDao.insertSettings(
+                        Settings(
+                            id = 1,
+                            themeMode = "system",
+                            currency = "₹",
+                            pinEnabled = false,
+                            biometricEnabled = false,
+                            notificationsEnabled = true,
+                            colorPalette = "Default"
+                        )
                     )
-                    repository.accountDao.insertAccount(
-                        Account(name = "Bank Account", type = "Bank Account", openingBalance = 0.0, currentBalance = 0.0, icon = "account_balance", color = "#A0C4FF")
-                    )
                 }
-            } catch (e: Exception) {
+
+
+// Seed Default Chart of Accounts
+                    // Seed Default Accounts if there are no accounts
+                    val accounts = repository.allAccounts.first()
+
+                    if (accounts.isEmpty()) {
+                        repository.accountDao.insertAccount(
+                            Account(
+                                name = "Cash",
+                                type = "Cash",
+                                openingBalance = 0.0,
+                                currentBalance = 0.0,
+                                icon = "wallet",
+                                color = "#FFD6A5"
+                            )
+                        )
+
+                        repository.accountDao.insertAccount(
+                            Account(
+                                name = "Bank Account",
+                                type = "Bank Account",
+                                openingBalance = 0.0,
+                                currentBalance = 0.0,
+                                icon = "account_balance",
+                                color = "#A0C4FF"
+                            )
+                        )
+                    }
+
+// Seed Default Chart of Accounts
+                    val chartAccounts = repository.allChartOfAccounts.first()
+
+                    if (chartAccounts.isEmpty()) {
+
+                        val defaultChartAccounts = listOf(
+                            ChartOfAccount(
+                                accountCode = "1000",
+                                accountName = "Cash",
+                                accountType = "ASSET",
+                                description = "Cash on hand"
+                            ),
+
+                            ChartOfAccount(
+                                accountCode = "1100",
+                                accountName = "Bank Account",
+                                accountType = "ASSET",
+                                description = "Money held in bank accounts"
+                            ),
+
+                            ChartOfAccount(
+                                accountCode = "2000",
+                                accountName = "Accounts Payable",
+                                accountType = "LIABILITY",
+                                description = "Amounts owed to suppliers and other parties"
+                            ),
+
+                            ChartOfAccount(
+                                accountCode = "3000",
+                                accountName = "Owner's Equity",
+                                accountType = "EQUITY",
+                                description = "Owner's investment in the business"
+                            ),
+
+                            ChartOfAccount(
+                                accountCode = "4000",
+                                accountName = "Sales Revenue",
+                                accountType = "REVENUE",
+                                description = "Income generated from sales"
+                            ),
+
+                            ChartOfAccount(
+                                accountCode = "5000",
+                                accountName = "General Expenses",
+                                accountType = "EXPENSE",
+                                description = "General operating expenses"
+                            )
+                        )
+
+                        defaultChartAccounts.forEach { account ->
+                            repository.insertChartOfAccount(account)
+                        }
+                    }
+                } catch (e: Exception) {
                 e.printStackTrace()
             }
-        }
-    }
+
+            }
+
+
+        }//viewModelScope block code
+
 
     fun setPin(pin: String) {
         if (pin.length in 4..6) {
@@ -289,6 +564,62 @@ class ExpensoViewModel(application: Application) : AndroidViewModel(application)
         initialValue = emptyList()
     )
 
+// --- ACCOUNTING SYSTEM ---
+
+    val allChartOfAccounts = repository.allChartOfAccounts
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = emptyList()
+        )
+
+    val allJournalEntries = repository.allJournalEntries
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = emptyList()
+        )
+
+    val allJournalLines = repository.allJournalLines
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = emptyList()
+        )
+
+    //code starts here
+    fun getGeneralLedger(accountId: Int): Flow<List<LedgerLine>> {
+        return repository.getGeneralLedger(accountId)
+    }
+    //code ends here
+
+    // NEW CODE
+    fun createJournalEntry(
+        entry: JournalEntry,
+        lines: List<JournalLine>,
+        onSuccess: () -> Unit = {},
+        onError: (String) -> Unit = {}
+    ) {
+        viewModelScope.launch {
+            try {
+                repository.createJournalEntry(
+                    entry = entry,
+                    lines = lines
+                )
+
+                onSuccess()
+
+            } catch (e: Exception) {
+                e.printStackTrace()
+                onError(e.message ?: "Failed to save journal entry.")
+            }
+        }
+    }
+    //New code ends here
+
+    //new code here
+
+    //ends here
     private fun getInitialSettings(): Settings {
         val themeMode = prefs.getString("theme_mode", "system") ?: "system"
         val colorPalette = prefs.getString("color_palette", "Default") ?: "Default"
@@ -939,7 +1270,11 @@ class ExpensoViewModel(application: Application) : AndroidViewModel(application)
                 
                 // Split transactions into pages
                 val chunks = if (txList.isEmpty()) listOf(emptyList()) else txList.chunked(rowsPerPage)
-                
+
+                //currencySymbol code starts here
+               // val currencySymbol = settings?.currency ?: "GH₵"
+
+                //ends here
                 chunks.forEachIndexed { pageIndex, pageTxList ->
                     val pageInfo = android.graphics.pdf.PdfDocument.PageInfo.Builder(pageWidth, pageHeight, pageIndex + 1).create()
                     val page = pdfDocument.startPage(pageInfo)
@@ -1029,7 +1364,13 @@ class ExpensoViewModel(application: Application) : AndroidViewModel(application)
                     canvas.drawText("Account", colAccountX, headerTextY, boldTextPaint)
                     canvas.drawText("Category", colCategoryX, headerTextY, boldTextPaint)
                     canvas.drawText("Type", colTypeX, headerTextY, boldTextPaint)
-                    canvas.drawText("Amount (₹)", colAmountX, headerTextY, boldTextPaint)
+                    canvas.drawText(
+                        "Amount (GH₵)",
+                        colAmountX,
+                        headerTextY,
+                        boldTextPaint
+                    )
+                    //canvas.drawText("Amount ($)", colAmountX, headerTextY, boldTextPaint)
                     
                     // Draw rows
                     var currentY = headerY + headerHeight
@@ -1074,7 +1415,7 @@ class ExpensoViewModel(application: Application) : AndroidViewModel(application)
                         canvas.drawText(typeUpper, colTypeX, rowTextY, typePaint)
                         
                         // Amount
-                        val formattedAmount = String.format("₹%.2f", tx.amount)
+                        val formattedAmount = String.format("GH₵%.2f",tx.amount)
                         canvas.drawText(formattedAmount, colAmountX, rowTextY, textPaint)
                         
                         currentY += rowHeight

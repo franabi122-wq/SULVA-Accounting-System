@@ -34,6 +34,9 @@ import androidx.compose.ui.input.pointer.pointerInput
 import kotlin.math.absoluteValue
 import com.expenso.app.data.*
 import com.expenso.app.ui.screens.*
+import com.expenso.app.data.ChartOfAccount
+import com.expenso.app.ui.screens.GeneralLedgerScreen
+import com.expenso.app.ui.screens.ChartOfAccountsScreen
 import com.expenso.app.ui.theme.MyApplicationTheme
 
 class MainActivity : androidx.fragment.app.FragmentActivity() {
@@ -263,12 +266,25 @@ fun MainAppContent(
     }
     var activeForm by activeFormState
     var previousForm by remember { mutableStateOf<String?>(null) }
+    //code start here
+    var moreScreen by remember { mutableStateOf("more") }
 
-    BackHandler(enabled = activeForm != null || currentTab != 0) {
+    var selectedChartAccount by remember {
+        mutableStateOf<ChartOfAccount?>(null)
+    }
+    //ends here
+
+    //code starte here
+    BackHandler(
+        enabled = activeForm != null ||
+                (currentTab == 4 && moreScreen != "more") ||
+                currentTab != 0
+    ) {
         if (activeForm != null) {
+
             if (activeFormStack.size > 1) {
                 val popped = activeFormStack.removeAt(activeFormStack.lastIndex)
-                // Clear state of the popped screen
+
                 when (popped) {
                     "edit_transaction" -> selectedTransactionToEdit = null
                     "edit_account" -> selectedAccountToEdit = null
@@ -276,6 +292,7 @@ fun MainAppContent(
                     "edit_goal" -> selectedGoalToEdit = null
                     "edit_budget" -> selectedBudgetToEdit = null
                 }
+
             } else {
                 activeFormStack.clear()
                 selectedTransactionToEdit = null
@@ -284,10 +301,18 @@ fun MainAppContent(
                 selectedCategoryToEdit = null
                 selectedBudgetToEdit = null
             }
+
+        } else if (currentTab == 4 && moreScreen != "more") {
+
+            // Go back inside the More section
+            moreScreen = "more"
+
         } else if (currentTab != 0) {
+
             viewModel.selectTab(0)
         }
     }
+  //code ends here
 
     // Listen to localized alerts / budget warnings from SharedFlow
     val context = LocalContext.current
@@ -347,6 +372,7 @@ fun MainAppContent(
                     }
                 }
             },
+            //code starts here
             bottomBar = {
                 NavigationBar(
                     containerColor = MaterialTheme.colorScheme.surface,
@@ -354,45 +380,115 @@ fun MainAppContent(
                     modifier = Modifier
                         .fillMaxWidth()
                         .zIndex(1f)
-                        .clip(androidx.compose.foundation.shape.RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp))
+                        .clip(
+                            androidx.compose.foundation.shape.RoundedCornerShape(
+                                topStart = 24.dp,
+                                topEnd = 24.dp
+                            )
+                        )
                 ) {
                     NavigationBarItem(
                         selected = currentTab == 0,
                         onClick = { viewModel.selectTab(0) },
-                        icon = { Icon(Icons.Rounded.Home, contentDescription = null) },
-                        label = { Text("Home", style = MaterialTheme.typography.labelSmall.copy(fontSize = 10.sp)) },
+                        icon = {
+                            Icon(
+                                Icons.Rounded.Home,
+                                contentDescription = null
+                            )
+                        },
+                        label = {
+                            Text(
+                                "Home",
+                                style = MaterialTheme.typography.labelSmall.copy(
+                                    fontSize = 10.sp
+                                )
+                            )
+                        },
                         modifier = Modifier.testTag("tab_records")
                     )
+
                     NavigationBarItem(
                         selected = currentTab == 1,
                         onClick = { viewModel.selectTab(1) },
-                        icon = { Icon(Icons.Rounded.BarChart, contentDescription = null) },
-                        label = { Text("Analytics", style = MaterialTheme.typography.labelSmall.copy(fontSize = 10.sp)) },
+                        icon = {
+                            Icon(
+                                Icons.Rounded.BarChart,
+                                contentDescription = null
+                            )
+                        },
+                        label = {
+                            Text(
+                                "Analytics",
+                                style = MaterialTheme.typography.labelSmall.copy(
+                                    fontSize = 10.sp
+                                )
+                            )
+                        },
                         modifier = Modifier.testTag("tab_analysis")
                     )
+
                     NavigationBarItem(
                         selected = currentTab == 2,
                         onClick = { viewModel.selectTab(2) },
-                        icon = { Icon(Icons.Rounded.DonutLarge, contentDescription = null) },
-                        label = { Text("Budgets", style = MaterialTheme.typography.labelSmall.copy(fontSize = 10.sp)) },
+                        icon = {
+                            Icon(
+                                Icons.Rounded.DonutLarge,
+                                contentDescription = null
+                            )
+                        },
+                        label = {
+                            Text(
+                                "Budgets",
+                                style = MaterialTheme.typography.labelSmall.copy(
+                                    fontSize = 10.sp
+                                )
+                            )
+                        },
                         modifier = Modifier.testTag("tab_budgets")
                     )
+
                     NavigationBarItem(
                         selected = currentTab == 3,
                         onClick = { viewModel.selectTab(3) },
-                        icon = { Icon(Icons.Rounded.AccountBalance, contentDescription = null) },
-                        label = { Text("Accounts", style = MaterialTheme.typography.labelSmall.copy(fontSize = 10.sp)) },
+                        icon = {
+                            Icon(
+                                Icons.Rounded.AccountBalance,
+                                contentDescription = null
+                            )
+                        },
+                        label = {
+                            Text(
+                                "Accounts",
+                                style = MaterialTheme.typography.labelSmall.copy(
+                                    fontSize = 10.sp
+                                )
+                            )
+                        },
                         modifier = Modifier.testTag("tab_accounts")
                     )
+
                     NavigationBarItem(
                         selected = currentTab == 4,
                         onClick = { viewModel.selectTab(4) },
-                        icon = { Icon(Icons.Rounded.MoreHoriz, contentDescription = null) },
-                        label = { Text("More", style = MaterialTheme.typography.labelSmall.copy(fontSize = 10.sp)) },
+                        icon = {
+                            Icon(
+                                Icons.Rounded.MoreHoriz,
+                                contentDescription = null
+                            )
+                        },
+                        label = {
+                            Text(
+                                "More",
+                                style = MaterialTheme.typography.labelSmall.copy(
+                                    fontSize = 10.sp
+                                )
+                            )
+                        },
                         modifier = Modifier.testTag("tab_more")
                     )
                 }
-            }
+            },
+    //code structure ends here
         ) { innerPadding ->
             Box(
                 modifier = Modifier
@@ -478,29 +574,142 @@ fun MainAppContent(
                                 }
                             )
                         }
+                        //code starte here
                         4 -> {
-                            MoreScreen(
-                                viewModel = viewModel,
-                                onExportCsv = onExportCsv,
-                                onImportCsv = onImportCsv,
-                                onExportPdf = onExportPdf,
-                                onNavigateToCategories = { activeForm = "categories" },
-                                onNavigateToAddCategory = { activeForm = "add_category" },
-                                onEditCategory = { category ->
-                                    selectedCategoryToEdit = category
-                                    lastNonNullCategoryToEdit = category
-                                    activeForm = "edit_category"
-                                },
-                                onNavigateToAddBudget = { activeForm = "add_budget" },
-                                onNavigateToAddGoal = { activeForm = "add_goal" },
-                                onNavigateToAddRecurring = { activeForm = "add_recurring" },
-                                onEditSavingsGoal = { goal ->
-                                    selectedGoalToEdit = goal
-                                    lastNonNullGoalToEdit = goal
-                                    activeForm = "edit_goal"
+                            when (moreScreen) {
+
+                                "more" -> {
+                                    MoreScreen(
+                                        viewModel = viewModel,
+                                        onExportCsv = onExportCsv,
+                                        onImportCsv = onImportCsv,
+                                        onExportPdf = onExportPdf,
+
+                                        onNavigateToCategories = {
+                                            activeForm = "categories"
+                                        },
+
+                                        onNavigateToAccounting = {
+                                            moreScreen = "accounting"
+                                        },
+
+                                        onNavigateToAddCategory = {
+                                            activeForm = "add_category"
+                                        },
+
+                                        onEditCategory = { category ->
+                                            selectedCategoryToEdit = category
+                                            lastNonNullCategoryToEdit = category
+                                            activeForm = "edit_category"
+                                        },
+
+                                        onNavigateToAddBudget = {
+                                            activeForm = "add_budget"
+                                        },
+
+                                        onNavigateToAddGoal = {
+                                            activeForm = "add_goal"
+                                        },
+
+                                        onNavigateToAddRecurring = {
+                                            activeForm = "add_recurring"
+                                        },
+
+                                        onEditSavingsGoal = { goal ->
+                                            selectedGoalToEdit = goal
+                                            lastNonNullGoalToEdit = goal
+                                            activeForm = "edit_goal"
+                                        }
+                                    )
                                 }
-                            )
+
+                                "accounting" -> {
+                                    AccountingScreen(
+                                        viewModel = viewModel,
+
+                                        onNavigateToChartOfAccounts = {
+                                            moreScreen = "chart_of_accounts"
+                                        },
+
+                                        //code starts here
+                                        onNavigateToJournalEntries = {
+                                            moreScreen = "journal_entries"
+                                        },
+
+                                        //ends here
+                                        onNavigateToJournalLines = {
+                                            moreScreen = "journal_lines"
+                                        },
+
+                                        onDismiss = {
+                                            moreScreen = "more"
+                                        }
+                                    )
+                                }//accounting arguement ends here
+
+                                "journal_lines" -> {
+                                    JournalLinesScreen(
+                                        viewModel = viewModel,
+
+                                        onDismiss = {
+                                            moreScreen = "accounting"
+                                        }
+                                    )
+                                }//journal code ends here
+
+                                //code starts here
+
+                                "journal_entries" -> {
+                                    JournalEntriesScreen(
+                                        viewModel = viewModel,
+
+                                        onDismiss = {
+                                            moreScreen = "accounting"
+                                        }
+                                    )
+                                }//journal code ends here
+                                //ends here
+
+                        //Code starts here
+                                "chart_of_accounts" -> {
+                                    ChartOfAccountsScreen(
+                                        viewModel = viewModel,
+
+                                        onAddAccount = {
+                                            // We will connect the accounting account form later
+                                        },
+
+                                        onEditAccount = { account ->
+                                            // We will connect editing later
+                                        },
+
+                                        onOpenLedger = { account ->
+                                            selectedChartAccount = account
+                                            moreScreen = "general_ledger"
+                                        }
+                                    )
+                                }
+
+                                "general_ledger" -> {
+                                    val account = selectedChartAccount
+
+                                    if (account != null) {
+                                        GeneralLedgerScreen(
+                                            viewModel = viewModel,
+                                            account = account,
+                                            onDismiss = {
+                                                moreScreen = "chart_of_accounts"
+                                                selectedChartAccount = null
+                                            }
+                                        )
+                                    } else {
+                                        moreScreen = "chart_of_accounts"
+                                    }
+                                }
+                        //code ends here
+                            }
                         }
+                        //code ends here
                     }
                 }
             }
@@ -508,17 +717,27 @@ fun MainAppContent(
 
         // FULL SCREEN OVERLAY TRANSITIONAL MODAL DIALOGS FOR FORMS
 
+        //code starts here
         AnimatedContent(
             targetState = activeForm,
             transitionSpec = {
                 val isHorizontalState = { state: String? ->
                     state != null && state != "add_transaction" && state != "search_transactions"
                 }
-                
+
                 if (initialState == null && targetState != null) {
-                    val enterAnim = if (targetState in listOf("add_transaction", "edit_transaction", "add_category", "edit_category")) {
+                    val enterAnim = if (targetState in listOf(
+                            "add_transaction",
+                            "edit_transaction",
+                            "add_category",
+                            "edit_category"
+                        )
+                    ) {
                         scaleIn(
-                            transformOrigin = androidx.compose.ui.graphics.TransformOrigin(0.85f, 0.9f),
+                            transformOrigin = androidx.compose.ui.graphics.TransformOrigin(
+                                0.85f,
+                                0.9f
+                            ),
                             initialScale = 0.82f,
                             animationSpec = com.expenso.app.ui.components.ExpensoAnimations.defaultSpring()
                         ) + fadeIn(
@@ -541,9 +760,18 @@ fun MainAppContent(
                     }
                     enterAnim togetherWith fadeOut(animationSpec = tween(0))
                 } else if (initialState != null && targetState == null) {
-                    val exitAnim = if (initialState in listOf("add_transaction", "edit_transaction", "add_category", "edit_category")) {
+                    val exitAnim = if (initialState in listOf(
+                            "add_transaction",
+                            "edit_transaction",
+                            "add_category",
+                            "edit_category"
+                        )
+                    ) {
                         scaleOut(
-                            transformOrigin = androidx.compose.ui.graphics.TransformOrigin(0.85f, 0.9f),
+                            transformOrigin = androidx.compose.ui.graphics.TransformOrigin(
+                                0.85f,
+                                0.9f
+                            ),
                             targetScale = 0.82f,
                             animationSpec = com.expenso.app.ui.components.ExpensoAnimations.defaultSpring()
                         ) + fadeOut(
@@ -566,14 +794,37 @@ fun MainAppContent(
                     }
                     fadeIn(animationSpec = tween(0)) togetherWith exitAnim
                 } else {
+                    //code starts here
                     val getDepth = { state: String? ->
                         when (state) {
                             null -> 0
-                            "search_transactions", "categories", "add_transaction", "add_budget", "edit_budget", "add_goal", "edit_goal", "add_recurring", "edit_recurring" -> 1
+
+                            "search_transactions",
+                            "categories",
+                            "add_transaction",
+                            "add_budget",
+                            "edit_budget",
+                            "add_goal",
+                            "edit_goal",
+                            "add_recurring",
+                            "edit_recurring" -> 1
+
+                            "accounting",
                             "edit_transaction" -> 2
-                            "add_category", "edit_category", "add_account", "edit_account" -> 3
+
+                            "journal_lines",
+                             "journal_entries",
+                            "chart_of_accounts",
+                            "general_ledger",
+                            "add_category",
+                            "edit_category",
+                            "add_account",
+                            "edit_account" -> 3
+
                             else -> 1
-                        }
+                    //code ends here
+
+            }
                     }
                     val isBack = getDepth(initialState) > getDepth(targetState)
                     val slideSpec = com.expenso.app.ui.components.ExpensoAnimations.defaultSpring<androidx.compose.ui.unit.IntOffset>()
@@ -663,6 +914,84 @@ fun MainAppContent(
                             }
                         )
                     }
+                    //code starts here
+                    "accounting" -> {
+                        AccountingScreen(
+                            viewModel = viewModel,
+
+                            onNavigateToChartOfAccounts = {
+                                activeForm = "chart_of_accounts"
+                            },
+
+                            onNavigateToJournalLines = {
+                                activeForm = "journal_lines"
+                            },
+
+                            onNavigateToJournalEntries = {
+                                activeForm = "journal_entries"
+                            },
+
+                            onDismiss = {
+                                activeForm = null
+                            }
+                        )
+                    }
+                    //code ends here
+
+                    //code starts here
+                    "chart_of_accounts" -> {
+                        //code starts here
+                        ChartOfAccountsScreen(
+                            viewModel = viewModel,
+
+                            onAddAccount = {
+                                // We can connect accounting  creation later
+                            },
+
+                            onEditAccount = { account ->
+                                // We can connect editing later
+                            },
+
+                            onOpenLedger = { account ->
+                                selectedChartAccount = account
+                                activeForm = "general_ledger"
+                            }
+                        )//code ends here
+
+                    }
+                    //code ends here
+
+                    //starts here
+                    "general_ledger" -> {
+                        val account = selectedChartAccount
+
+                        if (account != null) {
+                            GeneralLedgerScreen(
+                                viewModel = viewModel,
+                                account = account,
+                                onDismiss = {
+                                    activeForm = "chart_of_accounts"
+                                    selectedChartAccount = null
+                                }
+                            )
+                        } else {
+                            activeForm = "chart_of_accounts"
+                        }
+                    }
+                   //ends here
+                    //code ends here
+
+                    "journal_lines" -> {
+                        JournalLinesScreen(
+                            viewModel = viewModel,
+                            onDismiss = {
+                                activeForm = null
+                            }
+                        )
+                    }
+                    //code ends here
+
+
                     "categories" -> {
                         CategoriesScreen(
                             viewModel = viewModel,
@@ -747,7 +1076,7 @@ fun MainAppContent(
                     }
                 }
             }
-        }
+        }//code block ends here
 
         val isProcessingFile by viewModel.isProcessingFile.collectAsState()
         val fileProcessingMessage by viewModel.fileProcessingMessage.collectAsState()
