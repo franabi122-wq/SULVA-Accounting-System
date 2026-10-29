@@ -5,6 +5,7 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
+import com.expenso.app.data.SupplierPayment
 
 @Database(
     entities = [
@@ -19,9 +20,19 @@ import androidx.sqlite.db.SupportSQLiteDatabase
         // Accounting entities
         ChartOfAccount::class,
         JournalEntry::class,
-        JournalLine::class
+        JournalLine::class,
+
+    //Accounts Receivable entities
+        Customer::class,
+        CustomerInvoice::class,
+        CustomerPayment::class,
+
+       Supplier::class,
+       SupplierInvoice::class,
+        SupplierPayment::class
     ],
-    version = 19,
+    //version = 19,
+    version = 23,
     exportSchema = false
 )//ends here
 
@@ -36,7 +47,12 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun chartOfAccountDao(): ChartOfAccountDao
     abstract fun journalEntryDao(): JournalEntryDao
     abstract fun journalLineDao(): JournalLineDao
-
+    abstract fun customerDao(): CustomerDao
+    abstract fun customerInvoiceDao(): CustomerInvoiceDao
+    abstract fun customerPaymentDao(): CustomerPaymentDao
+    abstract fun supplierDao(): SupplierDao
+    abstract fun supplierInvoiceDao(): SupplierInvoiceDao
+    abstract fun supplierPaymentDao(): SupplierPaymentDao
 
     companion object {
         @Volatile
@@ -130,7 +146,146 @@ abstract class AppDatabase : RoomDatabase() {
             )
         """.trimIndent())
             }
+        }//END OF MIGRATION_18_19 CODE
+        //ends here
+
+        //Start of MIGRATION_18_20 CODE here
+        val MIGRATION_19_20 = object : androidx.room.migration.Migration(19, 20) {
+
+            override fun migrate(db: androidx.sqlite.db.SupportSQLiteDatabase) {
+
+                db.execSQL("""
+            CREATE TABLE IF NOT EXISTS customers (
+                id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                customerCode TEXT NOT NULL,
+                name TEXT NOT NULL,
+                phone TEXT NOT NULL,
+                email TEXT NOT NULL,
+                address TEXT NOT NULL,
+                notes TEXT NOT NULL,
+                isActive INTEGER NOT NULL,
+                createdAt TEXT NOT NULL
+            )
+        """.trimIndent())
+
+                db.execSQL("""
+            CREATE TABLE IF NOT EXISTS customer_invoices (
+                id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                customerId INTEGER NOT NULL,
+                invoiceNumber TEXT NOT NULL,
+                invoiceDate TEXT NOT NULL,
+                dueDate TEXT NOT NULL,
+                description TEXT NOT NULL,
+                amount REAL NOT NULL,
+                amountPaid REAL NOT NULL,
+                status TEXT NOT NULL,
+                journalEntryId INTEGER,
+                createdAt TEXT NOT NULL
+            )
+        """.trimIndent())
+
+                db.execSQL("""
+            CREATE TABLE IF NOT EXISTS customer_payments (
+                id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                invoiceId INTEGER NOT NULL,
+                customerId INTEGER NOT NULL,
+                paymentDate TEXT NOT NULL,
+                amount REAL NOT NULL,
+                accountId INTEGER NOT NULL,
+                referenceNumber TEXT NOT NULL,
+                notes TEXT NOT NULL,
+                journalEntryId INTEGER,
+                createdAt TEXT NOT NULL
+            )
+        """.trimIndent())
+
+                // Add the Accounts Receivable control account.
+                db.execSQL("""
+            INSERT OR IGNORE INTO chart_of_accounts
+            (accountCode, accountName, accountType, description, isActive)
+            VALUES
+            (
+                '1200',
+                'Accounts Receivable',
+                'ASSET',
+                'Amounts owed to the business by customers',
+                1
+            )
+        """.trimIndent())
+            }
         }
+        //ends here
+
+        //code starts here
+        val MIGRATION_20_21 = object : androidx.room.migration.Migration(20, 21) {
+
+            override fun migrate(db: androidx.sqlite.db.SupportSQLiteDatabase) {
+
+                db.execSQL("""
+            CREATE TABLE IF NOT EXISTS suppliers (
+                id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                supplierCode TEXT NOT NULL,
+                name TEXT NOT NULL,
+                phone TEXT NOT NULL,
+                email TEXT NOT NULL,
+                address TEXT NOT NULL,
+                notes TEXT NOT NULL,
+                isActive INTEGER NOT NULL,
+                createdAt TEXT NOT NULL
+            )
+        """.trimIndent())
+            }
+        }
+        //ends here
+
+        //code starts here
+        val MIGRATION_21_22 = object : androidx.room.migration.Migration(21, 22) {
+
+            override fun migrate(db: androidx.sqlite.db.SupportSQLiteDatabase) {
+
+                db.execSQL("""
+            CREATE TABLE IF NOT EXISTS supplier_invoices (
+                id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                supplierId INTEGER NOT NULL,
+                invoiceNumber TEXT NOT NULL,
+                invoiceDate TEXT NOT NULL,
+                dueDate TEXT NOT NULL,
+                description TEXT NOT NULL,
+                subtotal REAL NOT NULL,
+                taxAmount REAL NOT NULL,
+                totalAmount REAL NOT NULL,
+                amountPaid REAL NOT NULL,
+                status TEXT NOT NULL,
+                createdAt TEXT NOT NULL
+            )
+        """.trimIndent())
+            }
+        }
+        //ends here
+
+        //code starts here
+        val MIGRATION_22_23 =
+            object : androidx.room.migration.Migration(22, 23) {
+
+                override fun migrate(
+                    db: androidx.sqlite.db.SupportSQLiteDatabase
+                ) {
+
+                    db.execSQL("""
+                CREATE TABLE IF NOT EXISTS supplier_payments (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                    supplierId INTEGER NOT NULL,
+                    supplierInvoiceId INTEGER NOT NULL,
+                    paymentDate TEXT NOT NULL,
+                    amount REAL NOT NULL,
+                    paymentMethod TEXT NOT NULL,
+                    referenceNumber TEXT NOT NULL,
+                    notes TEXT NOT NULL,
+                    createdAt TEXT NOT NULL
+                )
+            """.trimIndent())
+                }
+            }
         //ends here
 
         fun getDatabase(context: Context): AppDatabase {
@@ -148,9 +303,15 @@ abstract class AppDatabase : RoomDatabase() {
                         MIGRATION_15_16,
                         MIGRATION_16_17,
                         MIGRATION_17_18,
-                        MIGRATION_18_19
+                        MIGRATION_18_19,
+                        MIGRATION_19_20,
+                        MIGRATION_20_21,
+                        MIGRATION_21_22,
+                        MIGRATION_22_23
                     )
                     //code ends here
+
+
 
                 .fallbackToDestructiveMigration(dropAllTables = true)
                 .build()
@@ -236,6 +397,13 @@ abstract class AppDatabase : RoomDatabase() {
     (accountCode, accountName, accountType, description, isActive)
     VALUES
     ('1100', 'Bank Account', 'ASSET', 'Money held in bank accounts', 1)
+""".trimIndent())
+
+                    db.execSQL("""
+    INSERT INTO chart_of_accounts
+    (accountCode, accountName, accountType, description, isActive)
+    VALUES
+    ('1200', 'Accounts Receivable', 'ASSET', 'Amounts owed by customers and other parties', 1)
 """.trimIndent())
 
                     db.execSQL("""

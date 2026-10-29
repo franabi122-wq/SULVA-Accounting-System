@@ -97,7 +97,7 @@ fun SplashAndLockScreen(
                 Spacer(modifier = Modifier.height(24.dp))
 
                 Text(
-                    text = "Expenso Secure",
+                    text = "SULVA Secure",
                     style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold),
                     color = MaterialTheme.colorScheme.onSurface
                 )

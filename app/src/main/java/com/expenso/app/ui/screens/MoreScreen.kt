@@ -72,6 +72,7 @@ fun MoreScreen(
     onNavigateToAddRecurring: () -> Unit,
     onEditSavingsGoal: (SavingsGoal) -> Unit,
     onNavigateToAccounting: () -> Unit,
+    onNavigateToFinancial: () -> Unit
     //onNavigateToJournalLines: () -> Unit
 
 ) {
@@ -104,7 +105,7 @@ fun MoreScreen(
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         
-        com.expenso.app.ui.components.ExpensoTopBar(title = "Expenso")
+        com.expenso.app.ui.components.ExpensoTopBar(title = "SULVA")
 
         // SECTION 1: FINANCIAL MANAGEMENT HOOKS
         Text("Management Hub", style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold), color = MaterialTheme.colorScheme.primary)
@@ -147,6 +148,22 @@ fun MoreScreen(
                     color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.4f)
                 )
                 //code ends here
+
+                //Financial reports here
+                ExpensoMenuItem(
+                    icon = Icons.Rounded.Assessment,
+                    title = "Financial",
+                    subtitle = "Income statement and balance sheet",
+                    iconTint = MaterialTheme.colorScheme.primary,
+                    iconBgColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.15f),
+                    onClick = { onNavigateToFinancial() }
+                )
+
+                HorizontalDivider(
+                    modifier = Modifier.padding(horizontal = 16.dp),
+                    color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.4f)
+                )
+                //ends here
 
                 ExpensoMenuItem(
                     icon = Icons.Rounded.Category,

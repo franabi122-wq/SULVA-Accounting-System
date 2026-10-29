@@ -44,6 +44,14 @@ interface JournalEntryDao {
     """)
     suspend fun getJournalEntryById(id: Int): JournalEntry?
 
+    @Query("""
+    SELECT * FROM journal_entries
+    WHERE referenceNumber = :referenceNumber
+    LIMIT 1
+""")
+    suspend fun getJournalEntryByReferenceNumber(
+        referenceNumber: String): JournalEntry?
+
     @Insert
     suspend fun insertJournalEntry(entry: JournalEntry): Long
 

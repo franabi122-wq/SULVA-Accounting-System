@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.AccountBalance
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -65,7 +66,10 @@ fun GeneralLedgerScreen(
     ) {
 
         ExpensoTopBar(
-            title = "General Ledger"
+            title = "General Ledger",
+            navigationIcon = Icons.AutoMirrored.Rounded.ArrowBack,
+            onNavigationClick = onDismiss,
+            navigationContentDescription = "Back"
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -349,7 +353,7 @@ private fun formatLedgerAmount(
 ): String {
     return String.format(
         Locale.getDefault(),
-        "%,.2f",
+        "GH₵ %,.2f",
         amount
     )
 }

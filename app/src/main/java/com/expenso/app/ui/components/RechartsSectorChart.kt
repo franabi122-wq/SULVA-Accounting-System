@@ -53,20 +53,30 @@ data class SectorCategoryLegend(
 @Composable
 fun RechartsSectorSpendingChart(
     transactions: List<TransactionWithDetails>,
+    selectedMonth: Calendar,
     currency: String,
     modifier: Modifier = Modifier
 ) {
     // 1. Prepare Last 6 Months range
-    val last6Months = remember(transactions) {
-        val cal = Calendar.getInstance()
-        val sdfMonth = SimpleDateFormat("MMM", Locale.getDefault())
+    val last6Months = remember(
+        selectedMonth.get(Calendar.YEAR),
+        selectedMonth.get(Calendar.MONTH)
+    ) {
         val list = mutableListOf<Pair<Int, Int>>() // Pair(month 0-11, year)
-        
+
         for (i in 5 downTo 0) {
-            val tempCal = Calendar.getInstance()
-            tempCal.add(Calendar.MONTH, -i)
-            list.add(Pair(tempCal.get(Calendar.MONTH), tempCal.get(Calendar.YEAR)))
+            val tempCal = (selectedMonth.clone() as Calendar).apply {
+                add(Calendar.MONTH, -i)
+            }
+
+            list.add(
+                Pair(
+                    tempCal.get(Calendar.MONTH),
+                    tempCal.get(Calendar.YEAR)
+                )
+            )
         }
+
         list
     }
 
@@ -453,22 +463,7 @@ fun RechartsPieChart(
 ) {
     // 1. Filter expenses for the current month
     val currentMonthTransactions = remember(transactions) {
-        val cal = Calendar.getInstance()
-        val currentMonth = cal.get(Calendar.MONTH)
-        val currentYear = cal.get(Calendar.YEAR)
-        val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-
-        transactions.filter { tx ->
-            if (tx.type != "expense") return@filter false
-            try {
-                val dateStr = tx.transactionDate.split("T").first()
-                val date = sdf.parse(dateStr)
-                val txCal = Calendar.getInstance().apply { if (date != null) time = date }
-                txCal.get(Calendar.MONTH) == currentMonth && txCal.get(Calendar.YEAR) == currentYear
-            } catch (e: Exception) {
-                false
-            }
-        }
+        transactions.filter { it.type == "expense" }
     }
 
     // 2. Group by category

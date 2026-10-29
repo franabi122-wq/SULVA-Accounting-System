@@ -38,6 +38,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.activity.compose.BackHandler
+import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import com.expenso.app.data.ChartOfAccount
 import com.expenso.app.data.ExpensoViewModel
 import com.expenso.app.data.JournalEntry
@@ -110,7 +111,10 @@ fun JournalLinesScreen(
     ) {
 
         ExpensoTopBar(
-            title = "Journal Lines"
+            title = "Journal Lines",
+            navigationIcon = Icons.AutoMirrored.Rounded.ArrowBack,
+            onNavigationClick = onDismiss,
+            navigationContentDescription = "Back"
         )
 
         Spacer(modifier = Modifier.height(16.dp))

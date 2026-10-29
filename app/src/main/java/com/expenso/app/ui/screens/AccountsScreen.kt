@@ -87,7 +87,7 @@ fun AccountsScreen(
             modifier = Modifier.fillMaxWidth()
         ) {
             com.expenso.app.ui.components.ExpensoTopBar(
-                title = "Expenso",
+                title = "SULVA",
                 actionIcon = Icons.Rounded.Add,
                 onActionClick = onAddAccountClick,
                 actionContentDescription = "Add account"
@@ -148,7 +148,7 @@ fun AccountsScreen(
 
                     // Side-by-Side Income and Expense displays
                     Row(
-                        modifier = Modifier.fillMaxWidth().height(IntrinsicSize.Min),
+                        modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
@@ -188,7 +188,9 @@ fun AccountsScreen(
 
                         VerticalDivider(
                             color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.15f),
-                            modifier = Modifier.padding(horizontal = 16.dp)
+                            modifier = Modifier
+                                .height(40.dp)
+                                .padding(horizontal = 16.dp)
                         )
 
                         // Expense Info

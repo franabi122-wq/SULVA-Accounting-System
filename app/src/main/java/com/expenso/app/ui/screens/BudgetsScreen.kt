@@ -194,7 +194,7 @@ fun BudgetsScreen(
                     }
                 } else {
                     com.expenso.app.ui.components.ExpensoTopBar(
-                        title = "Expenso",
+                        title = "SULVA",
                         actionIcon = Icons.Rounded.Add,
                         onActionClick = onNavigateToAddBudget,
                         actionContentDescription = "New Budget"

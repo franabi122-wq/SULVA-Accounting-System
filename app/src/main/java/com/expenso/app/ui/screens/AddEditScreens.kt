@@ -1,5 +1,6 @@
 package com.expenso.app.ui.screens
 
+import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.widget.Toast
 import kotlinx.coroutines.launch
@@ -161,6 +162,7 @@ private fun evaluateMathExpression(str: String): Double {
 }
 
 // --- TRANSCTION FORM ---
+@SuppressLint("UnusedBoxWithConstraintsScope")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TransactionForm(
@@ -1117,14 +1119,16 @@ fun TransactionForm(
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .weight(1f),
+                        .weight(1.2f)
+                        .verticalScroll(rememberScrollState())
+                        .padding(bottom = 72.dp),
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     keypadKeys.forEach { rowKeys ->
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .weight(1f),
+                                .height(72.dp),
                             horizontalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
                             rowKeys.forEach { key ->

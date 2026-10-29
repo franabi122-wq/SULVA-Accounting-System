@@ -145,6 +145,13 @@ fun RecordsScreen(
                 endCal.set(Calendar.DAY_OF_MONTH, 31)
                 viewModel.filterDateRange.value = Pair(startCal.timeInMillis, endCal.timeInMillis)
             }
+
+            //starte here
+            "All Time" -> {
+                viewModel.filterDateRange.value = null
+            }
+            //ends here
+
             "Custom" -> {
                 if (customStartDate != null && customEndDate != null) {
                     val calEnd = Calendar.getInstance().apply {
@@ -335,7 +342,7 @@ fun RecordsScreen(
                 } else {
                     // Normal App Bar
                     com.expenso.app.ui.components.ExpensoTopBar(
-                        title = "Expenso",
+                        title = "SULVA",
                         actionIcon = Icons.Rounded.Search,
                         onActionClick = onSearchClick,
                         actionContentDescription = "Search"
@@ -442,6 +449,7 @@ fun RecordsScreen(
                                             "Select Date Range"
                                         }
                                     }
+                                    "All Time" -> "All Time"
                                     else -> "All Time"
                                 }
                                 
@@ -654,6 +662,7 @@ fun RecordsScreen(
                 }
 
                 val filterOptions = listOf(
+                    "All Time" to "transactions",
                     "Daily" to "Single day",
                     "Weekly" to "Current week",
                     "Monthly" to "Current month",

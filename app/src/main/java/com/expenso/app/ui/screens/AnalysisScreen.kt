@@ -41,6 +41,7 @@ fun AnalysisScreen(
     onSearchClick: () -> Unit
 ) {
     val transactions by viewModel.filteredTransactions.collectAsState()
+    val allTransactions by viewModel.allTransactions.collectAsState()
     val budgets by viewModel.allBudgets.collectAsState()
     val settings by viewModel.settings.collectAsState()
 
@@ -155,7 +156,7 @@ fun AnalysisScreen(
             )
         } else {
             com.expenso.app.ui.components.ExpensoTopBar(
-                title = "Expenso",
+                title = "SULVA",
                 actionIcon = Icons.Rounded.Search,
                 onActionClick = onSearchClick,
                 actionContentDescription = "Search"
@@ -290,7 +291,8 @@ fun AnalysisScreen(
                 // RECHARTS SECTOR SPENDING DASHBOARD COMPONENT (NEW)
                 AnimatedEntranceItem(index = 1) {
                     RechartsSectorSpendingChart(
-                        transactions = transactions,
+                        transactions = allTransactions,
+                        selectedMonth = currentMonthCalendar,
                         currency = currency,
                         modifier = Modifier.fillMaxWidth()
                     )

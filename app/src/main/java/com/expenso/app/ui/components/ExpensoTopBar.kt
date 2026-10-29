@@ -8,6 +8,9 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.*
+
+import androidx.compose.material.icons.automirrored.rounded.ArrowBack
+
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -19,7 +22,7 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun ExpensoTopBar(
-    title: String = "Expenso",
+    title: String = "SULVA",
     actionIcon: ImageVector? = null,
     onActionClick: (() -> Unit)? = null,
     actionContentDescription: String? = null,
@@ -30,6 +33,7 @@ fun ExpensoTopBar(
     Row(
         modifier = Modifier
             .fillMaxWidth()
+            .statusBarsPadding()
             .padding(vertical = 4.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
@@ -48,7 +52,10 @@ fun ExpensoTopBar(
                             BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.4f)),
                             shape = CircleShape
                         )
-                        .clickable { onNavigationClick() },
+                        .clickable(
+                            enabled = true,
+                            onClick = { onNavigationClick() }
+                        ),
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
@@ -75,7 +82,10 @@ fun ExpensoTopBar(
                         BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.4f)),
                         shape = CircleShape
                     )
-                    .clickable { onActionClick() },
+                    .clickable(
+                        enabled = true,
+                        onClick = { onActionClick() }
+                    ),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(

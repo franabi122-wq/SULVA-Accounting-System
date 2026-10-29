@@ -15,6 +15,8 @@ import androidx.compose.material.icons.rounded.ExpandMore
 import androidx.compose.material.icons.rounded.Payments
 import androidx.compose.material.icons.rounded.ReceiptLong
 import androidx.compose.material.icons.rounded.Savings
+import androidx.activity.compose.BackHandler
+import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -32,8 +34,13 @@ fun ChartOfAccountsScreen(
     viewModel: ExpensoViewModel,
     onAddAccount: () -> Unit = {},
     onEditAccount: (ChartOfAccount) -> Unit = {},
-    onOpenLedger: (ChartOfAccount) -> Unit = {}
+    onOpenLedger: (ChartOfAccount) -> Unit = {},
+    onDismiss: () -> Unit = {}
 ) {
+    BackHandler {
+        onDismiss()
+    }
+
     val accounts by viewModel.allChartOfAccounts.collectAsState()
     //val accounts = emptyList<ChartOfAccount>()
 
@@ -50,6 +57,9 @@ fun ChartOfAccountsScreen(
 
         ExpensoTopBar(
             title = "Chart of Accounts",
+            navigationIcon = Icons.AutoMirrored.Rounded.ArrowBack,
+            onNavigationClick = onDismiss,
+            navigationContentDescription = "Back",
             actionIcon = Icons.Rounded.Add,
             onActionClick = onAddAccount,
             actionContentDescription = "Add account"
