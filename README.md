@@ -139,7 +139,7 @@ The following screenshots showcase the application's existing user interface.
   <tr>
     <td><img width="270" alt="Application Screenshot 1" src="screenshots/Accounts_payable_Screen.jpeg" /></td>
     <td><img width="270" alt="Application Screenshot 2" src="screenshots/Charts_accounts_screen.jpeg" /></td>
-    <td><img width="270" alt="Application Screenshot 3" src="screenshots/customer_invoice_schema.png" /></td>
+    <td><img width="270" alt="Application Screenshot 3" src="screenshots/Sulva_Dashboard_screen.jpeg" /></td>
     </tr>
   <tr>
     <td><img width="270" alt="Application Screenshot 5" src="screenshots/Financial_Reports_Screen.jpeg" /></td>
