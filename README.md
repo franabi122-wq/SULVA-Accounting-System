@@ -1,4 +1,4 @@
-                                            SULVA Accounting System
+                                       SULVA Accounting System
 
 SULVA Accounting System is an Android-based accounting application developed using Kotlin to support financial record management and essential accounting operations. The system brings together account management, journal entries, customer and supplier records, invoice processing, payment tracking, and financial reporting in one application.
 
